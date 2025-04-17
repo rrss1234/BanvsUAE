@@ -1,0 +1,139 @@
+name: Build and Release App
+
+on:
+  workflow_dispatch: # Only manual triggering
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'standard'
+        type: choice
+        options:
+          - standard
+          - pre-release
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: write # Required for creating releases
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm install
+
+      # Extract version information from package.json
+      - name: Extract Version Info
+        id: package-info
+        run: |
+          APP_NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          PRODUCT_NAME=$(node -p "require('./package.json').build.productName || require('./package.json').name")
+          TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+          RELEASE_ID="v$VERSION"
+          
+          echo "app_name=$APP_NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "product_name=$PRODUCT_NAME" >> $GITHUB_OUTPUT
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "release_id=$RELEASE_ID" >> $GITHUB_OUTPUT
+          
+          # Display the extracted info for debugging
+          echo "App Name: $APP_NAME"
+          echo "Version: $VERSION"
+          echo "Product Name: $PRODUCT_NAME"
+          echo "Timestamp: $TIMESTAMP"
+          echo "Release ID: $RELEASE_ID"
+        shell: bash
+      
+      # Force clear electron-builder cache
+      - name: Clear electron-builder cache
+        run: |
+          rm -rf ~/.cache/electron-builder || true
+          rm -rf ./dist || true
+        shell: bash
+      
+      # Create a package.json copy with enforced version
+      - name: Create build-specific package.json
+        run: |
+          # Read package.json and ensure version is correct
+          jq '.version = "${{ steps.package-info.outputs.version }}"' package.json > package.json.tmp
+          mv package.json.tmp package.json
+          cat package.json | grep version
+        shell: bash
+      
+      # Build Windows binaries with explicit version flag
+      - name: Build Windows App
+        run: npm run build:win -- --publish=never --c.extraMetadata.version=${{ steps.package-info.outputs.version }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+      
+      # Generate release notes from changelog
+      - name: Prepare Release Notes
+        id: release-notes
+        run: |
+          if [ -f CHANGELOG.md ]; then
+            # Read changelog and update with current version
+            CHANGELOG_CONTENT=$(cat CHANGELOG.md | sed "s/\[VERSION\]/${{ steps.package-info.outputs.version }}/g")
+            echo "$CHANGELOG_CONTENT" > release_notes.md
+            
+            # Add build information footer
+            echo -e "\n## Build Information\nBuild Date: $(date +'%Y-%m-%d')\nVersion: ${{ steps.package-info.outputs.version }}\nBuild ID: ${{ steps.package-info.outputs.timestamp }}" >> release_notes.md
+          else
+            # Create simple release notes if no changelog
+            echo "# ${{ steps.package-info.outputs.product_name }} v${{ steps.package-info.outputs.version }}" > release_notes.md
+            echo -e "\nBuild Date: $(date +'%Y-%m-%d')\nBuild ID: ${{ steps.package-info.outputs.timestamp }}\n" >> release_notes.md
+          fi
+          echo "notes_file=release_notes.md" >> $GITHUB_OUTPUT
+        shell: bash
+      
+      # Rename the built files to include version
+      - name: Rename output files with version
+        run: |
+          # Get all .exe files in dist
+          find dist -name "*.exe" -type f | while read file; do
+            # Get basename and directory
+            dir=$(dirname "$file")
+            base=$(basename "$file")
+            
+            # Check if version is in filename
+            if [[ "$base" != *"${{ steps.package-info.outputs.version }}"* ]]; then
+              # If no version in filename, rename to include version
+              new_name="${dir}/${{ steps.package-info.outputs.product_name }}-Setup-${{ steps.package-info.outputs.version }}.exe"
+              echo "Renaming $file to $new_name"
+              mv "$file" "$new_name"
+            fi
+          done
+        shell: bash
+      
+      # List build artifacts
+      - name: List Build Artifacts
+        run: |
+          ls -la dist/
+          echo "Checking file details:"
+          find dist -type f -name "*.exe" -exec ls -la {} \;
+        shell: bash
+      
+      # Create GitHub Release without tags
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "${{ steps.package-info.outputs.product_name }} v${{ steps.package-info.outputs.version }} (Build ${{ steps.package-info.outputs.timestamp }})"
+          tag_name: "${{ steps.package-info.outputs.release_id }}"
+          draft: false
+          prerelease: ${{ github.event.inputs.release_type == 'pre-release' }}
+          files: |
+            dist/*.exe
+          body_path: ${{ steps.release-notes.outputs.notes_file }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
