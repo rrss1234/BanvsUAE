@@ -1,151 +1,186 @@
-<style>
-    .announcement-bar {
-        color: black;
-        padding: 10px 0;
-        overflow: hidden;
-        white-space: nowrap;
-        position: relative;
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rs Live TV - Live Sports Player</title>
+  <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
+  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    .marquee {
-        display: inline-block;
-        animation: marquee 65.00s linear infinite;
-        padding-left: 100%; /* Add initial offset */
+    #player-container {
+      position: relative;
+      width: 100%;
+      max-height: 60vh;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .video-js {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Loader */
+    #loading-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #f44336;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      z-index: 9999;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .headline {
+      background: #d32f2f;
+      color: #fff;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 10px 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .headline span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 20s linear infinite;
     }
 
     @keyframes marquee {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-100%); }
-    }
-</style>
-
-<div class="announcement-bar">
-    <div class="marquee">
-          ⚠️ DISCLAIMER: Rs Live Tv  does not stream any of the channels included in this website &amp; application, all the streaming links are from third party websites available freely on the internet. We're just giving way to stream and all content is the copyright of their owner. 
-        
-         ⚠️ DISCLAIMER: Rs Live Tv  does not stream any of the channels included in this website &amp; application, all the streaming links are from third party websites available freely on the internet. We're just giving way to stream and all content is the copyright of their owner.
-    
-          ⚠️ DISCLAIMER: Rs Live Tv  does not stream any of the channels included in this website &amp; application, all the streaming links are from third party websites available freely on the internet. We're just giving way to stream and all content is the copyright of their owner.
-           ⚠️ DISCLAIMER: Rs Live Tv  does not stream any of the channels included in this website &amp; application, all the streaming links are from third party websites available freely on the internet. We're just giving way to stream and all content is the copyright of their owner.
-           ⚠️ DISCLAIMER: Rs Live Tv  does not stream any of the channels included in this website &amp; application, all the streaming links are from third party websites available freely on the internet. We're just giving way to stream and all content is the copyright of their owner.
-    </div>
-</div>
-<iframe src="https://esportspk.github.io/esports/player.html?id=asportshd"""
-    width="100%" height="850px" 
-    sandbox="allow-scripts allow-same-origin allow-modals"
-    marginheight="0" marginwidth="0" scrolling="no" frameborder="0" 
-    allowfullscreen allow="encrypted-media">
-</iframe>
-<script type="text/javascript" src="//www.highperformanceformat.com/f9746dfef85e6ec5c7141e4723441071/invoke.js"></script>
-
-<div style="text-align: center;"><br></div>
-<div id="myHeader">
-<div id="http">
-<script src="//content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
-
-<div id="player">
-</div>
-<script type="text/javascript">
-jwplayer("player").resize(480, 270);
-    jwplayer('player').setup({
-        file: https://001.fclplayer.net/live/csstream2/playlist.m3u8?id=1002&pk=69908e7e61f4b6348706325e4656e3d40dc3028e6198ed0a98917843c2ca41d1',
-
-playbackRateControls: [0.75, 1, 1.25, 1.5],
-        title: 'Esports Live ',
-        width: '100%',
-        aspectratio: '16:9',
-        mute: false,
-        repeat: 'true',
-        autostart:true,
-        primary: 'html5',
-        type: 'm38u',
-        setFullscreen: true,
-controls: true,
-showCode: true,
-responsive: true,
-skin: {
-  name: "glow",
-       active: "red",
-       inactive: "",
-       Background: ""
-  }
-    });
-</script>
-</div>
-
-<script>
-window.onscroll = function() {myFunction()};
-
-var header = document.getElementById("myHeader");
-var sticky = header.offsetTop;
-
-function myFunction() {
-  if (window.pageYOffset >= sticky) {
-    header.classList.add("sticky");
-  } else {
-    header.classList.remove("sticky");
-  }
-}
-</script>
-<!-- BEGIN: Powered by Supercounters.com -->
-<center><script type="text/javascript" src="//widget.supercounters.com/ssl/online_t.js"></script><script type="text/javascript">sc_online_t(1711926,"Users Online","170ddb");</script><br><noscript><a href="https://www.supercounters.com/">supercounters.com</a></noscript>
-</center>
-<!-- END: Powered by Supercounters.com -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Secure Page</title>
-  <script>
-    // iframe block
-    if (window.top !== window.self) {
-      window.top.location = window.self.location;
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
     }
 
-    // Disable right-click
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    }, false);
+    .channel-info {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: #121212;
+    }
 
-    // Block F12, Ctrl+Shift+I, Ctrl+U etc.
-    document.addEventListener('keydown', function(e) {
-      // F12
-      if (e.keyCode === 123) {
-        e.preventDefault();
+    .channel-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 16px;
+      border: 2px solid #f44336;
+    }
+
+    .channel-info h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .channel-info h2 {
+        font-size: 16px;
       }
-      // Ctrl+Shift+I or Ctrl+Shift+J or Ctrl+U
-      if ((e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u')) {
-        e.preventDefault();
+
+      .channel-info img {
+        width: 48px;
+        height: 48px;
       }
-    });
-  </script>
-  <style>
-    /* Optional: disable text selection */
-    body {
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
+    }
+
+    /* Watermark */
+    .vjs-watermark {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 999;
+    }
+
+    .vjs-watermark img {
+      width: 80px;
+      opacity: 0.8;
     }
   </style>
 </head>
-  <script async="async" data-cfasync="false" src="//pl26377079.profitableratecpm.com/cdeccdd75d3e2e6916a42ce9653cfb08/invoke.js"></script>
-<div id="container-cdeccdd75d3e2e6916a42ce9653cfb08"></div>
 <body>
-  <h1><h1>
-  <p></p>
+  <!-- ভিডিও প্লেয়ার -->
+  <div id="player-container">
+    <div id="loading-spinner"></div>
+    <video
+      id="live-video"
+      class="video-js vjs-default-skin"
+      controls
+      autoplay
+      muted
+      playsinline
+      preload="auto"
+    ></video>
+    <!-- Watermark -->
+    <div class="vjs-watermark">
+      <img src="https://i.postimg.cc/CxwVHY40/20250415-163330.png" alt="Watermark" />
+    </div>
+  </div>
+
+  <!-- হেডলাইন -->
+  <div class="headline">
+    <span>
+      🎯 বড় ম্যাচের অপেক্ষা শেষ!
+🔥 আজ রাত ৯টা
+🇧🇩 বাংলাদেশ বনাম পাকিস্তান 🇵🇰
+🏏 প্রথম টি-টোয়েন্টি ম্যাচ
+⚡ প্রস্তুত হোন উত্তেজনার জন্য!
+📍 মিস করবেন না এক মুহূর্তও! নিয়মিত আপডেট পেতে টেলিগ্রামে যুক্ত হন ▶ @rslivetv
+    </span>
+  </div>
+
+  <!-- চ্যানেল তথ্য -->
+  <div class="channel-info">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU3j4XITMpR4JMLVocLxrrO5-2fUll6sAVwx2lyO_fk2eazPaokNa-WOTq&s=10" alt="Rs Live TV Logo" />
+    <h2>BAN vs PAK, 1st-T20i</h2>
+  </div>
+
+  <script>
+    const player = videojs('live-video', {
+      sources: [{
+        src: 'https://live.tsports.com/mobile_hls/tsports_live_1/playlist.m3u8',
+        type: 'application/x-mpegURL'
+      }],
+    });
+
+    const spinner = document.getElementById("loading-spinner");
+
+    player.on('waiting', () => {
+      spinner.style.display = "block";
+    });
+
+    player.on('playing', () => {
+      spinner.style.display = "none";
+    });
+
+    player.on('error', () => {
+      spinner.style.display = "none";
+      alert("ভিডিও চালু করতে সমস্যা হচ্ছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।");
+    });
+  </script>
+
+  <!-- অ্যাড কোড -->
+  <script async data-cfasync="false" src="//pl26377079.profitableratecpm.com/cdeccdd75d3e2e6916a42ce9653cfb08/invoke.js"></script>
+  <div id="container-cdeccdd75d3e2e6916a42ce9653cfb08"></div>
 </body>
 </html>
-<script>
-  const allowedParent = "https://esportspk.site";
-
-  if (window !== window.top) {
-    // This page is inside an iframe
-    if (document.referrer.startsWith(allowedParent)) {
-      // Allowed domain - do nothing
-    } else {
-      // Not allowed - block content
-      document.body.innerHTML = "<h1>Embedding not allowed from this domain.</h1>";
-    }
-  }
-</script>
