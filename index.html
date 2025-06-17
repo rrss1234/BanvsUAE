@@ -1,185 +1,251 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rs Live TV - Live Sports Player</title>
-  <link href="https://vjs.zencdn.net/8.5.2/video-js.css" rel="stylesheet" />
-  <script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: #fff;
-      font-family: 'Roboto', sans-serif;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rs Live - Dark Mode Version</title>
 
-    #player-container {
-      position: relative;
-      width: 100%;
-      max-height: 60vh;
-      aspect-ratio: 16 / 9;
-      background: #000;
-    }
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-    .video-js {
-      width: 100%;
-      height: 100%;
-    }
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    /* Loader */
-    #loading-spinner {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid #f44336;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      z-index: 9999;
-    }
+<style>
+  :root {
+    --primary: #e67e22;
+    --primary-dark: #cf711f;
+    --bg-light: #121212;
+    --bg-dark: #000000;
+    --text-dark: #ddd;
+    --text-light: #fff;
+    --btn-bg: #333333;
+    --btn-hover: #e67e22;
+    --shadow: rgba(230, 126, 34, 0.3);
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; 
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    display: flex; 
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  #playerContainer {
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    margin: 20px auto 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px var(--shadow);
+    background: #000;
+  }
+  .server-section {
+    max-width: 960px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 0 10px;
+  }
+  .server-btn {
+    background: var(--btn-bg);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-light);
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 4px 8px var(--shadow);
+  }
+  .server-btn:hover {
+    background-color: var(--btn-hover);
+    color: var(--text-light);
+  }
+  .server-btn.active {
+    background-color: var(--primary);
+    color: var(--text-light);
+    box-shadow: 0 6px 14px var(--primary-dark);
+  }
+  .server-btn .server-quality {
+    font-size: 11px;
+    display: block;
+    margin-top: 4px;
+    opacity: 0.8;
+    color: var(--text-light);
+  }
+  .server-btn.active::after {
+    content: "✓";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--text-light);
+  }
+  .info-section {
+    max-width: 960px;
+    margin: 0 auto 30px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    box-shadow: 0 8px 18px var(--shadow);
+    padding: 24px;
+    color: var(--text-light);
+  }
+  .match-banner {
+    max-width: 240px;
+    display: block;
+    margin: 0 auto 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+  .description {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .meta-info {
+    font-size: 14px;
+    background: #3a3a3a;
+    border-left: 5px solid var(--primary);
+    padding: 14px 20px;
+    border-radius: 6px;
+    color: #d4a15d;
+    margin-bottom: 20px;
+  }
+  .share-section h3 {
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-align: center;
+    color: var(--primary);
+  }
+  .share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+  }
+  .share-buttons a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    background: var(--btn-bg);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    font-size: 18px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px var(--shadow);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .share-buttons a:hover {
+    background: var(--primary);
+    color: var(--text-light);
+  }
+  .share-buttons a.facebook:hover { background: #3b5998; }
+  .share-buttons a.twitter:hover { background: #1da1f2; }
+  .share-buttons a.whatsapp:hover { background: #25d366; }
 
-    @keyframes spin {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    .headline {
-      background: #d32f2f;
-      color: #fff;
-      overflow: hidden;
-      white-space: nowrap;
-      padding: 10px 0;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    }
-
-    .headline span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: marquee 20s linear infinite;
-    }
-
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    .channel-info {
-      display: flex;
-      align-items: center;
-      padding: 16px;
-      background: #121212;
-    }
-
-    .channel-info img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 16px;
-      border: 2px solid #f44336;
-    }
-
-    .channel-info h2 {
-      margin: 0;
-      font-size: 20px;
-      color: #fff;
-    }
-
-    @media (max-width: 600px) {
-      .channel-info h2 {
-        font-size: 16px;
-      }
-
-      .channel-info img {
-        width: 48px;
-        height: 48px;
-      }
-    }
-
-    /* Watermark */
-    .vjs-watermark {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 999;
-    }
-
-    .vjs-watermark img {
-      width: 80px;
-      opacity: 0.8;
-    }
-  </style>
+  /* Scrollbar hide for servers */
+  .server-section::-webkit-scrollbar {
+    display: none;
+  }
+  .server-section {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+</style>
 </head>
 <body>
-  <!-- ভিডিও প্লেয়ার -->
-  <div id="player-container">
-    <div id="loading-spinner"></div>
-    <video
-      id="live-video"
-      class="video-js vjs-default-skin"
-      controls
-      autoplay
-      muted
-      playsinline
-      preload="auto"
-    ></video>
-    <!-- Watermark -->
-    <div class="vjs-watermark">
-      <img src="https://i.postimg.cc/CxwVHY40/20250415-163330.png" alt="Watermark" />
+
+<div id="playerContainer"></div>
+
+<div class="server-section">
+  <button class="server-btn active" data-url="https://live.tsports.com/mobile_hls/tsports_live_1/playlist.m3u8">
+    BAN vs SRI
+    <span class="server-quality">Server 1</span>
+  </button>
+  <button class="server-btn" data-url="https://edge3-moblive.yuppcdn.net/drm/smil:tencricketdrm.smil/index.m3u8">
+    Ten Cricket
+    <span class="server-quality">Server 2</span>
+  </button>
+  <button class="server-btn" data-url="https://live.tsports.com/mobile_hls/tsports_live_2/playlist.m3u8">
+    Tsports
+    <span class="server-quality">Server 3</span>
+  </button>
+</div>
+
+<div class="info-section">
+  <img src="https://i.postimg.cc/43qJPPLY/20250617-203701.png" alt="Match Banner" class="match-banner" />
+  <p class="description">
+    🏏 <strong>বাংলাদেশ বনাম শ্রীলঙ্কা</strong> লাইভ স্ট্রিমিং<br>
+    উপরের সার্ভার থেকে পছন্দমতো একটি সিলেক্ট করুন।
+  </p>
+  <p class="meta-info">
+    ⚠️ সমস্যা হলে অন্য সার্ভার চেষ্টা করুন অথবা আমাদের জানান।<br>
+    📌 ভালো কানেকশনের জন্য Wi-Fi ব্যবহার করুন।
+  </p>
+
+  <div class="share-section">
+    <h3><i class="fas fa-share-alt"></i> Share this Stream</h3>
+    <div class="share-buttons">
+      <a href="#" class="facebook" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="twitter" title="Twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="whatsapp" title="WhatsApp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
+</div>
 
-  <!-- হেডলাইন -->
-  <div class="headline">
-    <span>
-     🏏 বাংলাদেশ vs পাকিস্তান — প্রথম টি-টোয়েন্টি ম্যাচ
+<!-- Clappr Player JS -->
+<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const playerContainer = document.getElementById('playerContainer');
+    const serverButtons = document.querySelectorAll('.server-btn');
+    let player;
 
-📍 স্থান: গাদ্দাফি স্টেডিয়াম লোহার পাকিস্তান 
-🕔 সময়: রাত ৯টা
-🎯 পাকিস্তান ব্যাট করছে প্রথমে! নিয়মিত আপডেট পেতে টেলিগ্রামে যুক্ত হন ▶ @rslivetv
-    </span>
-  </div>
+    function loadStream(url) {
+      playerContainer.style.opacity = '0.4';
+      setTimeout(() => {
+        if (player) player.destroy();
+        player = new Clappr.Player({
+          source: url,
+          parentId: '#playerContainer',
+          autoPlay: true,
+          height: '100%',
+          width: '100%',
+          mute: false,
+        });
+        playerContainer.style.opacity = '1';
+      }, 200);
+    }
 
-  <!-- চ্যানেল তথ্য -->
-  <div class="channel-info">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU3j4XITMpR4JMLVocLxrrO5-2fUll6sAVwx2lyO_fk2eazPaokNa-WOTq&s=10" alt="Rs Live TV Logo" />
-    <h2>BAN vs PAK, 1st-T20i</h2>
-  </div>
-
-  <script>
-    const player = videojs('live-video', {
-      sources: [{
-        src: 'https://alibabacdn2.tamashaweb.com/alibaba02/alibaba02stream_480p.m3u8?aliyunols=on',
-        type: 'application/x-mpegURL'
-      }],
+    serverButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.classList.contains('active')) return;
+        serverButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadStream(btn.dataset.url);
+      });
     });
 
-    const spinner = document.getElementById("loading-spinner");
+    // Load default active server stream
+    const activeBtn = document.querySelector('.server-btn.active');
+    if (activeBtn) loadStream(activeBtn.dataset.url);
+  });
+</script>
 
-    player.on('waiting', () => {
-      spinner.style.display = "block";
-    });
-
-    player.on('playing', () => {
-      spinner.style.display = "none";
-    });
-
-    player.on('error', () => {
-      spinner.style.display = "none";
-      alert("ভিডিও চালু করতে সমস্যা হচ্ছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।");
-    });
-  </script>
-
-  <!-- অ্যাড কোড -->
-  <script async data-cfasync="false" src="//pl26377079.profitableratecpm.com/cdeccdd75d3e2e6916a42ce9653cfb08/invoke.js"></script>
-  <div id="container-cdeccdd75d3e2e6916a42ce9653cfb08"></div>
 </body>
 </html>
